@@ -97,7 +97,7 @@ fi
 printf "\n " >> changes.txt
 printf "Installation Instructions:\n" >> changes.txt
 printf "* PC: Extract .ZIP archive into a folder of your choice. Linux users may need" >> changes.txt
-printf " to mark as executable with \`chmod\`\n" >> changes.txt
+printf " to mark as executable with \`chmod\`. Linux users may also choose to use the Flatpak.\n" >> changes.txt
 printf "* PSP: Extract the `nzportable` folder inside the .ZIP archive into \`PSP/GAME/\`.\n" >> changes.txt
 printf "* Nintendo Switch: Extract the `nzportable` folder inside the .ZIP archive" >> changes.txt
 printf " into \`/switch/\` and launch with Homebrew Launcher. Requires extra memory," >> changes.txt
