@@ -1,0 +1,131 @@
+/* Crypto HUD Styles for NZ:P */
+
+#crypto-hud {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #9945FF;
+    border-radius: 8px;
+    padding: 15px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: #fff;
+    z-index: 10000;
+    min-width: 200px;
+    box-shadow: 0 0 20px rgba(153, 69, 255, 0.5);
+}
+
+.crypto-stats > div {
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.crypto-stats > div:first-child {
+    border-bottom: 1px solid #9945FF;
+    padding-bottom: 8px;
+    margin-bottom: 12px;
+    font-size: 12px;
+}
+
+#crypto-kills,
+#crypto-rounds,
+#crypto-rewards {
+    color: #14F195;
+    font-weight: bold;
+}
+
+/* Phantom Connect Button */
+#phantom-connect-btn {
+    background: linear-gradient(135deg, #9945FF 0%, #14F195 100%);
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(153, 69, 255, 0.3);
+}
+
+#phantom-connect-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(153, 69, 255, 0.4);
+}
+
+#phantom-connect-btn:disabled {
+    background: #333;
+    cursor: default;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Main Menu Integration */
+.menu-crypto-section {
+    background: rgba(0, 0, 0, 0.9);
+    border: 2px solid #9945FF;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 400px;
+    text-align: center;
+}
+
+.menu-crypto-section h3 {
+    color: #14F195;
+    margin-bottom: 15px;
+}
+
+/* Reward Notification */
+.reward-notification {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(20, 241, 149, 0.9);
+    color: #000;
+    padding: 20px 40px;
+    border-radius: 10px;
+    font-size: 24px;
+    font-weight: bold;
+    animation: rewardPulse 2s ease-out;
+    z-index: 10001;
+}
+
+@keyframes rewardPulse {
+    0% {
+        transform: translate(-50%, -50%) scale(0.5);
+        opacity: 0;
+    }
+    50% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 0;
+    }
+}
+
+/* P2P Room Info */
+.p2p-room-info {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid #14F195;
+    border-radius: 8px;
+    padding: 10px 15px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    color: #fff;
+    z-index: 10000;
+}
+
+.p2p-room-code {
+    color: #14F195;
+    font-weight: bold;
+    font-size: 18px;
+}

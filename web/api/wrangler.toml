@@ -1,0 +1,17 @@
+name = "nzp-rewards"
+main = "rewards-worker.js"
+compatibility_date = "2024-01-01"
+
+[env.production]
+kv_namespaces = [
+  { binding = "GAME_KV", id = "YOUR_KV_NAMESPACE_ID" }
+]
+
+[env.production.vars]
+SOLANA_RPC_URL = "https://api.mainnet-beta.solana.com"
+ZAP_TOKEN_MINT = "YOUR_ZAP_TOKEN_MINT_ADDRESS"
+TREASURY_WALLET = "YOUR_TREASURY_WALLET_ADDRESS"
+
+[[env.production.secrets]]
+# Set with: wrangler secret put TREASURY_PRIVATE_KEY
+TREASURY_PRIVATE_KEY

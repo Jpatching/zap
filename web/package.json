@@ -1,0 +1,30 @@
+{
+  "name": "nzp-crypto-web",
+  "version": "1.0.0",
+  "description": "Nazi Zombies: Portable - Crypto Edition Web Components",
+  "main": "nzp-crypto.html",
+  "scripts": {
+    "deploy-api": "cd api && wrangler deploy",
+    "dev-api": "cd api && wrangler dev",
+    "build": "echo 'No build step required'",
+    "serve": "python3 -m http.server 8080"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.87.6",
+    "@solana/wallet-adapter-phantom": "^0.9.24",
+    "@solana/spl-token": "^0.3.9",
+    "peerjs": "^1.4.7"
+  },
+  "devDependencies": {
+    "wrangler": "^3.0.0"
+  },
+  "keywords": [
+    "nazi-zombies",
+    "crypto",
+    "solana",
+    "web3",
+    "gaming"
+  ],
+  "author": "NZP Team",
+  "license": "MIT"
+}

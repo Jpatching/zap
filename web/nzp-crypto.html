@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Nazi Zombies: Portable - Crypto Edition</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Crypto HUD Styles -->
+    <link rel="stylesheet" href="crypto/crypto-hud.css">
+
+    <!-- PeerJS for P2P -->
+    <script src="https://unpkg.com/peerjs@1.4.7/dist/peerjs.min.js"></script>
+
+    <!-- Solana Web3.js -->
+    <script src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.min.js"></script>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        #game-canvas {
+            width: 100%;
+            height: 100vh;
+            display: block;
+        }
+
+        #main-menu {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10002;
+        }
+
+        #main-menu.hidden {
+            display: none;
+        }
+
+        .menu-title {
+            color: #ff0000;
+            font-size: 48px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+
+        .menu-subtitle {
+            color: #14F195;
+            font-size: 24px;
+            margin-bottom: 40px;
+        }
+
+        .menu-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .menu-button {
+            background: #333;
+            border: 2px solid #666;
+            color: white;
+            padding: 15px 40px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 250px;
+        }
+
+        .menu-button:hover {
+            background: #555;
+            border-color: #ff0000;
+            transform: translateX(5px);
+        }
+
+        #multiplayer-menu {
+            display: none;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #14F195;
+            padding: 30px;
+            border-radius: 10px;
+        }
+
+        #multiplayer-menu h3 {
+            color: #14F195;
+            margin-bottom: 20px;
+        }
+
+        #room-code-input {
+            background: #222;
+            border: 2px solid #666;
+            color: white;
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px 0;
+            width: 200px;
+        }
+
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10003;
+        }
+
+        .loading-screen.hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <h1>Loading NZ:P Crypto Edition...</h1>
+        <div id="loading-status">Initializing...</div>
+    </div>
+
+    <!-- Main Menu -->
+    <div id="main-menu">
+        <h1 class="menu-title">NAZI ZOMBIES: PORTABLE</h1>
+        <h2 class="menu-subtitle">CRYPTO EDITION</h2>
+
+        <div class="menu-crypto-section">
+            <h3>Connect Your Wallet to Earn Rewards</h3>
+            <button id="phantom-connect-btn">Connect Wallet</button>
+        </div>
+
+        <div class="menu-buttons">
+            <button class="menu-button" onclick="startSoloGame()">SOLO</button>
+            <button class="menu-button" onclick="showMultiplayerMenu()">MULTIPLAYER</button>
+            <button class="menu-button" onclick="showOptions()">OPTIONS</button>
+            <button class="menu-button" onclick="showLeaderboard()">LEADERBOARD</button>
+        </div>
+
+        <div id="multiplayer-menu">
+            <h3>P2P Multiplayer</h3>
+            <button class="menu-button" onclick="hostGame()">HOST GAME</button>
+            <button class="menu-button" onclick="showJoinGame()">JOIN GAME</button>
+            <div id="join-game-section" style="display:none;">
+                <input type="text" id="room-code-input" placeholder="Enter Host ID">
+                <button class="menu-button" onclick="joinGame()">CONNECT</button>
+            </div>
+            <button class="menu-button" onclick="hideMultiplayerMenu()">BACK</button>
+        </div>
+    </div>
+
+    <!-- Game Canvas -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- Load crypto integration -->
+    <script src="crypto/phantom-integration.js"></script>
+    <script src="multiplayer/p2p-multiplayer.js"></script>
+
+    <script>
+        // Initialize crypto and P2P systems
+        let gameStarted = false;
+        let multiplayerMode = false;
+
+        window.addEventListener('load', async () => {
+            // Initialize Phantom
+            await window.NZPCrypto.phantom.init();
+
+            // Initialize P2P
+            await window.NZPP2P.init();
+
+            // Update loading status
+            document.getElementById('loading-status').textContent = 'Ready!';
+
+            // Show main menu after 1 second
+            setTimeout(() => {
+                document.getElementById('loading-screen').classList.add('hidden');
+            }, 1000);
+
+            // Setup wallet button
+            document.getElementById('phantom-connect-btn').addEventListener('click', () => {
+                window.NZPCrypto.connect();
+            });
+
+            // Load NZ:P game engine
+            loadGameEngine();
+        });
+
+        function loadGameEngine() {
+            // This would load the actual FTEQW WebAssembly build
+            const script = document.createElement('script');
+            script.src = 'fteqw.js';  // Path to FTEQW WebGL build
+            script.onload = () => {
+                console.log('Game engine loaded');
+                initializeGameBindings();
+            };
+            document.body.appendChild(script);
+        }
+
+        function initializeGameBindings() {
+            // Bind game events to crypto system
+            if (window.Module) {
+                // Override game functions to track crypto events
+                window.Module.onZombieKilled = function() {
+                    window.NZPCrypto.onZombieKill();
+                    if (multiplayerMode) {
+                        window.NZPP2P.sendKill(100);
+                    }
+                };
+
+                window.Module.onRoundComplete = function(round, score) {
+                    window.NZPCrypto.onRoundComplete(round, score);
+                    if (multiplayerMode) {
+                        window.NZPP2P.sendRoundComplete(round);
+                    }
+                };
+
+                window.Module.onPlayerMove = function(x, y, z) {
+                    if (multiplayerMode) {
+                        window.NZPP2P.sendPosition(x, y, z);
+                    }
+                };
+            }
+        }
+
+        function startSoloGame() {
+            multiplayerMode = false;
+            startGame();
+        }
+
+        function showMultiplayerMenu() {
+            document.getElementById('multiplayer-menu').style.display = 'block';
+        }
+
+        function hideMultiplayerMenu() {
+            document.getElementById('multiplayer-menu').style.display = 'none';
+        }
+
+        function showJoinGame() {
+            document.getElementById('join-game-section').style.display = 'block';
+        }
+
+        async function hostGame() {
+            multiplayerMode = true;
+            const roomCode = await window.NZPP2P.createRoom();
+            alert(`Room created! Share this code: ${roomCode}\nOr your full ID: ${window.NZPP2P.multiplayer.peerId}`);
+            startGame();
+        }
+
+        async function joinGame() {
+            multiplayerMode = true;
+            const hostId = document.getElementById('room-code-input').value;
+
+            try {
+                await window.NZPP2P.joinRoom(hostId);
+                startGame();
+            } catch (err) {
+                alert('Failed to join room: ' + err.message);
+            }
+        }
+
+        function startGame() {
+            document.getElementById('main-menu').classList.add('hidden');
+            gameStarted = true;
+
+            // Initialize game
+            if (window.Module && window.Module._startGame) {
+                window.Module._startGame();
+            }
+        }
+
+        function showOptions() {
+            alert('Options menu not implemented yet');
+        }
+
+        async function showLeaderboard() {
+            // Fetch leaderboard from API
+            try {
+                const response = await fetch('https://nzp-rewards.workers.dev/leaderboard');
+                const leaderboard = await response.json();
+
+                let leaderboardHTML = '<h3>Top Players</h3><ol>';
+                leaderboard.forEach(player => {
+                    leaderboardHTML += `<li>${player.wallet.slice(0,4)}...${player.wallet.slice(-4)}: ${player.totalRewards} ZAP</li>`;
+                });
+                leaderboardHTML += '</ol>';
+
+                // Show in modal or alert for now
+                alert(leaderboardHTML.replace(/<[^>]*>/g, '\n'));
+            } catch (err) {
+                alert('Failed to load leaderboard');
+            }
+        }
+
+        // Handle escape key to show/hide menu
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && gameStarted) {
+                document.getElementById('main-menu').classList.toggle('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
